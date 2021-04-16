@@ -38,7 +38,7 @@ const Home = (): JSX.Element => {
   }, [products]);
 
   function handleAddProduct(id: number) {
-    // TODO
+    console.log('verificando o id', id);
   }
 
   return (
@@ -50,7 +50,7 @@ const Home = (): JSX.Element => {
             <li key={id}>
               <img src={image} alt={title}/>
               <strong>{title}</strong>
-              <span>{price}</span>
+              <span>{formatPrice(price)}</span>
               <button
                 type="button"
                 data-testid="add-product-button"
