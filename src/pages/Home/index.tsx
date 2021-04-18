@@ -30,16 +30,11 @@ const Home = (): JSX.Element => {
   // }, {} as CartItemsAmount)
 
   useEffect(() => {
-    async function loadProducts() {
-      await api.get('/products').then(response => setProducts(response.data));
-    }
-
-    loadProducts();
+    api.get('/products').then(response => setProducts(response.data));
   }, [products]);
 
-  function handleAddProduct(product: any) {
-    console.log('verificando product', product);
-    addProduct(product);
+  function handleAddProduct(productId: number) {
+    addProduct(productId);
   }
 
   return (
@@ -55,7 +50,7 @@ const Home = (): JSX.Element => {
               <button
                 type="button"
                 data-testid="add-product-button"
-                onClick={() => handleAddProduct(product)}
+                onClick={() => handleAddProduct(id)}
               >
                 <div data-testid="cart-product-quantity">
                   <MdAddShoppingCart size={16} color="#FFF" />

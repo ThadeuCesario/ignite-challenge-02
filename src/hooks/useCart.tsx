@@ -12,16 +12,9 @@ interface UpdateProductAmount {
   amount: number;
 }
 
-interface ProductToBuy {
-  id: number;
-  title: string;
-  price: number;
-  image: string;
-}
-
 interface CartContextData {
   cart: Product[];
-  addProduct: (product: ProductToBuy) => Promise<void>;
+  addProduct: (productId: number) => Promise<void>;
   removeProduct: (productId: number) => void;
   updateProductAmount: ({ productId, amount }: UpdateProductAmount) => void;
 }
@@ -41,13 +34,15 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
     return [];
   });
 
-  const addProduct = async (product: ProductToBuy) => {
+  const addProduct = async (productId: number) => {
     try {
-      console.log(product)
-      // console.log('loading addProduct to cart: checking stock', stock);
-      // const filteringCurrentProduct = stock.find(item => item.id === productId);
-      // const isProductAvailable = filteringCurrentProduct ? filteringCurrentProduct.amount > 0 : false;
-      // console.log(isProductAvailable);
+      console.log('loading addProduct to cart: checking stock', stock);
+      const filteringCurrentProduct = stock.find(item => item.id === productId);
+      const isProductAvailable = filteringCurrentProduct ? filteringCurrentProduct.amount > 0 : false;
+
+      if(isProductAvailable && filteringCurrentProduct) {
+        setCart([{id: String(productId)}]);
+      }      
     } catch {
       // TODO
     }
