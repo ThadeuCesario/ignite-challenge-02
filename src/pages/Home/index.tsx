@@ -33,8 +33,8 @@ const Home = (): JSX.Element => {
     api.get('/products').then(response => setProducts(response.data));
   }, [products]);
 
-  function handleAddProduct(productId: number) {
-    addProduct(productId);
+  function handleAddProduct(product: Product) {
+    addProduct(product);
   }
 
   return (
@@ -50,7 +50,7 @@ const Home = (): JSX.Element => {
               <button
                 type="button"
                 data-testid="add-product-button"
-                onClick={() => handleAddProduct(id)}
+                onClick={() => handleAddProduct(product)}
               >
                 <div data-testid="cart-product-quantity">
                   <MdAddShoppingCart size={16} color="#FFF" />
