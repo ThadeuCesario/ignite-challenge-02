@@ -3,7 +3,7 @@ export interface Product {
   title: string;
   price: number;
   image: string;
-  amount?: number;
+  amount: number;
 }
 
 export interface Stock {
