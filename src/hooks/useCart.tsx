@@ -85,7 +85,7 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
             setCart([...newCart, ...productToUpdate]);
           }
           else {
-            toast.error('Quantidade solicitada fora de estoque');
+            return toast.error('Quantidade solicitada fora de estoque');
           }
         })
       }
@@ -95,6 +95,7 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
   };
 
   useEffect(() => {
+    console.log('cart', cart);
     localStorage.setItem('@RocketShoes:cart', JSON.stringify(cart));
   }, [cart]);
 
