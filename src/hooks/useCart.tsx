@@ -33,7 +33,7 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
 
     return [];
   });
-
+// refatorar o add product e o update product... eles devem estar estorando os testes...
   const addProduct = async (productId: number) => {
     try {
         await api.get(`/stock?id=${productId}`).then(async response => {
@@ -42,7 +42,8 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
             await api.get(`/products?id=${productId}`).then(response => {
               let newProduct = response.data[0];
               const alreadyInCart = cart.find(item => item.id === newProduct.id);
-              if(alreadyInCart){
+              if (alreadyInCart) {
+                // porque pegou o amount do produt?? sempre sobe para um, pega o amount do stock
                 const {amount: currentAmount} = alreadyInCart;
                 const amount = currentAmount + 1;
                 updateProductAmount({productId, amount})
