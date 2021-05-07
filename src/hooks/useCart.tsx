@@ -36,28 +36,18 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
 // refatorar o add product e o update product... eles devem estar estorando os testes...
   const addProduct = async (productId: number) => {
     try {
-        await api.get(`/stock?id=${productId}`).then(async response => {
-          let stockQuantity = response.data[0].amount;
-          if(stockQuantity) {
-            await api.get(`/products?id=${productId}`).then(response => {
-              let newProduct = response.data[0];
-              const alreadyInCart = cart.find(item => item.id === newProduct.id);
-              if (alreadyInCart) {
-                // porque pegou o amount do produt?? sempre sobe para um, pega o amount do stock
-                const {amount: currentAmount} = alreadyInCart;
-                const amount = currentAmount + 1;
-                updateProductAmount({productId, amount})
-              }
-              else {
-                newProduct.amount = 1;
-                setCart([...cart, newProduct]);
-              }
-            });
-          }
-          else {
-            toast.error('Quantidade solicitada fora de estoque');
-          }
+      await api.get(`/stock?id=${productId}`).then(async response => {
+        const {amount} = response.data[0];
+        if(amount <= 0) return toast.error('Quantidade solicitada fora de estoque');
+        const alreadyInCart = cart.find(item => item.id === productId);
+        if (alreadyInCart) return updateProductAmount({productId, amount});
+        await api.get(`/products?id=${productId}`).then(response => {
+          console.log('produto', response.data);
+          let newProduct = response.data[0];
+          newProduct.amount = 1;
+          setCart([...cart, newProduct]);
         });
+      });
     } catch {
       toast.error('Erro na adição do produto');
     }
@@ -76,27 +66,18 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
     amount,
   }: UpdateProductAmount) => {
     try {
-      if(amount > 0) {
-        await api.get(`/stock?id=${productId}`).then(async response => {
-          let stockQuantity = response.data[0].amount;
-          if(amount <= stockQuantity) {
-            const newCart = cart.filter(item => item.id !== productId);
-            const productToUpdate = cart.filter(item => item.id === productId);
-            productToUpdate[0].amount = amount;
-            setCart([...newCart, ...productToUpdate]);
-          }
-          else {
-            return toast.error('Quantidade solicitada fora de estoque');
-          }
-        })
-      }
+      if(amount <= 0) return toast.error('Quantidade solicitada fora de estoque');
+
+      const newCart = cart.filter(item => item.id !== productId);
+      const productToUpdate = cart.filter(item => item.id === productId);
+      productToUpdate[0].amount += 1 ;
+      setCart([...newCart, ...productToUpdate]);
     } catch {
       return toast.error('Erro na alteração de quantidade do produto');
     }
   };
 
   useEffect(() => {
-    console.log('cart', cart);
     localStorage.setItem('@RocketShoes:cart', JSON.stringify(cart));
   }, [cart]);
 
