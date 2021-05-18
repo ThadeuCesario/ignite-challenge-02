@@ -25,9 +25,7 @@ const Home = (): JSX.Element => {
   const [products, setProducts] = useState<ProductFormatted[]>([]);
   const { addProduct, cart } = useCart();
 
-  // const cartItemsAmount = cart.reduce((sumAmount, product) => {
-  //   // TODO
-  // }, {} as CartItemsAmount)
+  console.log("cart", cart);
 
   useEffect(() => {
     async function loadProducts() {
@@ -55,7 +53,7 @@ const Home = (): JSX.Element => {
         >
           <div data-testid="cart-product-quantity">
             <MdAddShoppingCart size={16} color="#FFF" />
-            {/* {cartItemsAmount[product.id] || 0} */} 2
+            {cart.filter(item => item.id === product.id)[0]?.amount || 0}
           </div>
 
           <span>ADICIONAR AO CARRINHO</span>
