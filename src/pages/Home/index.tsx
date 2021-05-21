@@ -25,8 +25,6 @@ const Home = (): JSX.Element => {
   const [products, setProducts] = useState<ProductFormatted[]>([]);
   const { addProduct, cart } = useCart();
 
-  console.log("cart", cart);
-
   useEffect(() => {
     async function loadProducts() {
       await api.get('products').then(response => setProducts(response.data));
