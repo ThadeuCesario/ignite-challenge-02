@@ -76,6 +76,8 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
     amount,
   }: UpdateProductAmount) => {
     try {
+      const productStock = await api.get(`stock?id=${productId}`);
+      if(!productStock.data.length) return;
       let tempCart = [...cart];
       const productAlreadyInCart = tempCart.findIndex(item => item.id === productId);
       const productIncrement = tempCart[productAlreadyInCart];
