@@ -32,10 +32,10 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
     return [];
   });
 
-  useEffect(() => {
+  const updateLocalStorage = (newCart: Product[]) => {
     localStorage.removeItem('@RocketShoes:cart');
-    localStorage.setItem('@RocketShoes:cart', JSON.stringify(cart))
-  }, [cart]);
+    localStorage.setItem('@RocketShoes:cart', JSON.stringify(newCart))
+  }
 
   const addProduct = async (productId: number) => {
     try {
@@ -64,8 +64,15 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
 
   const removeProduct = (productId: number) => {
     try {
-      const newCart = cart.filter(item => item.id !== productId);
-      setCart([...newCart])
+      const productExists = cart.filter(item => item.id === productId);
+      if(productExists.length){
+        const newCart = cart.filter(item => item.id !== productId);
+        setCart([...newCart]);
+        updateLocalStorage(newCart);
+      }
+      else {
+        toast.error('Erro na remoção do produto');
+      }
     } catch {
       toast.error('Erro na remoção do produto');
     }
