@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
   MdDelete,
   MdAddCircleOutline,
@@ -33,14 +33,16 @@ const Cart = (): JSX.Element => {
     )
 
   function handleProductIncrement(product: Product) {
+    const currentProduct = cart.filter(item => item.id === product.id);
     const productId = product.id;
-    const amount = 1;
+    const amount = currentProduct[0].amount + 1;
     updateProductAmount({productId, amount});
   }
 
   function handleProductDecrement(product: Product) {
+    const currentProduct = cart.filter(item => item.id === product.id);
     const productId = product.id;
-    const amount = -1;
+    const amount = currentProduct[0].amount - 1;
     updateProductAmount({productId, amount});
   }
 

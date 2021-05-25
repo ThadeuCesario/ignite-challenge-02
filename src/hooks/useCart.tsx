@@ -79,7 +79,8 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
   }: UpdateProductAmount) => {
     try {
       const productStock = await api.get(`/stock/${productId}`);
-      if(!productStock.data.length) {
+      if(amount < 1) throw Error();
+      if(!productStock?.data?.amount || productStock.data.amount < amount) {
         toast.error('Quantidade solicitada fora de estoque');
       }
       else {
