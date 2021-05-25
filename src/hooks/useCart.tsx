@@ -43,7 +43,7 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
       const productStock = await api.get(`/stock/${productId}`);
       const productAlreadyInCart = tempCart.findIndex(item => item.id === productId);
       const productAmount = productAlreadyInCart < 0 ? 1 : tempCart[productAlreadyInCart].amount + 1;
-      if(productStock.data[0].amount >= productAmount) {
+      if(productStock.data.amount >= productAmount) {
         if(productAlreadyInCart < 0) {
           const productDetails = await api.get(`/products/${productId}`);
           productDetails.data[0].amount = 1;
@@ -83,40 +83,23 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
     amount,
   }: UpdateProductAmount) => {
     try {
-      // const productStock = await api.get(`/stock/${productId}`);
-      // if(productStock.data.length) {
-      //   const indexProductInCart = cart.findIndex(item => item.id === productId);
-      //   if(productStock.data[0].amount >= cart[indexProductInCart].amount + amount){
-      //     let tempCart = [...cart];
-      //     const productIncrement = tempCart[indexProductInCart];
-      //     productIncrement.amount = amount;
-      //     tempCart = tempCart.filter(item => item.id !== productId);
-      //     setCart([...tempCart, productIncrement]);
-      //     updateLocalStorage([...tempCart, productIncrement]);
-      //   }
-      //   else {
-      //     toast.error('Quantidade solicitada fora de estoque');
-      //   }
-      // }
-      // else {
-      //   throw Error();
-      // }
-
-
-
       const productStock = await api.get(`/stock/${productId}`);
-      console.log(productStock)
       if(!productStock.data.length) {
         toast.error('Quantidade solicitada fora de estoque');
       }
       else {
         let tempCart = [...cart];
         const productAlreadyInCart = tempCart.findIndex(item => item.id === productId);
-        const productIncrement = tempCart[productAlreadyInCart];
-        productIncrement.amount = amount;
-        tempCart = tempCart.filter(item => item.id !== productId);
-        setCart([...tempCart, productIncrement]);
-        updateLocalStorage([...tempCart, productIncrement]);
+        if(productAlreadyInCart >= 0) {
+          const productIncrement = tempCart[productAlreadyInCart];
+          productIncrement.amount = amount;
+          tempCart = tempCart.filter(item => item.id !== productId);
+          setCart([...tempCart, productIncrement]);
+          updateLocalStorage([...tempCart, productIncrement]);
+        }
+        else {
+          throw Error();
+        }
       }
     } catch {
       toast.error('Erro na alteração de quantidade do produto');
